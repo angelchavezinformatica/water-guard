@@ -21,3 +21,7 @@ def splitlines(string: str, keepends=False):
         lines.append(''.join(current_line))
 
     return lines
+
+
+def join_path(*args):
+    return "/".join(arg.strip("/") for arg in args)

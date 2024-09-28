@@ -41,6 +41,11 @@ def get_response(request: Request, message: str = "", content_type: str = "text/
     )
 
 
+def get_file_response(request: Request, path: str, content_type: str = "text/plain"):
+    with open(path, mode='r') as file:
+        return get_response(request, message=file.read(), content_type=content_type)
+
+
 def get_response_not_found(request: Request) -> Response:
     """Create an 404 response"""
     return Response(

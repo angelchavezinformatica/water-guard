@@ -1,6 +1,26 @@
+import os
+
+import compatibility as cpb
 from server.request import Request
-from server.response import get_response, Response
+from server.response import get_response, get_file_response, Response
+from state import state
 
 
 def index(request: Request) -> Response:
+    file_path = cpb.join_path(os.getcwd(), 'static', 'index.html')
+    return get_file_response(request, file_path, 'text/html')
+
+
+def bomb_on(request: Request) -> Response:
+    state.bomb.on()
     return get_response(request)
+
+
+def bomb_off(request: Request) -> Response:
+    state.bomb.off()
+    return get_response(request)
+
+
+def bomb_state(request: Request) -> Response:
+    response = f"""{{"state": {"true" if state.bomb.get_state() else "false"}}}"""
+    return get_response(request, message=response, content_type='application/json')
