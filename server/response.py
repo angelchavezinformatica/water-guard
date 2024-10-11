@@ -32,7 +32,7 @@ def get_response(
     request: Request,
     message: str = "",
     content_type: str = "text/plain",
-    code=HttpStatusCode.OK
+    code=HttpStatusCode.OK,
 ) -> Response:
     """Create an OK response"""
     return Response(
@@ -46,9 +46,17 @@ def get_response(
     )
 
 
-def get_file_response(request: Request, path: str, content_type: str = "text/plain"):
+def get_file_response(
+    request: Request,
+    path: str,
+    content_type: str = "text/plain",
+) -> Response:
     with open(path, mode='r') as file:
-        return get_response(request, message=file.read(), content_type=content_type)
+        return get_response(
+            request,
+            message=file.read(),
+            content_type=content_type,
+        )
 
 
 def get_response_not_found(request: Request) -> Response:

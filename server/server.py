@@ -41,21 +41,20 @@ class Server:
             request = Request(data, addr)
             response = self.router(request)
             logger(response)
-            self.send_async(conn, response.encode())
+            data = response.encode()
+            self.send_async(conn, data)
         finally:
             conn.close()
 
     def send_async(self, conn: socket.socket, data: bytes, chunk_size=512):
         total_sent = 0
         data_len = len(data)
+
         while total_sent < data_len:
-            try:
-                sent = conn.send(data[total_sent:total_sent+chunk_size])
-                if sent == 0:
-                    raise RuntimeError("Socket connection broken")
-                total_sent += sent
-            except OSError:
-                pass
+            sent = conn.send(data[total_sent:total_sent+chunk_size])
+            if sent == 0:
+                return
+            total_sent += sent
 
     def router(self, request: Request) -> Response:
         for path in self.routes:

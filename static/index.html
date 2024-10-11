@@ -4,101 +4,26 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Control de Bomba de Agua</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        text-align: center;
-        padding: 50px;
-        background-color: #f0f0f0;
-      }
-      button {
-        font-size: 18px;
-        padding: 15px 30px;
-        margin: 10px;
-        cursor: pointer;
-        border: none;
-        border-radius: 5px;
-      }
-      #onButton {
-        background-color: #4caf50;
-        color: white;
-      }
-      #offButton {
-        background-color: #f44336;
-        color: white;
-      }
-      #status {
-        margin-top: 20px;
-        font-size: 24px;
-        color: #333;
-      }
-      #scheduleForm {
-        margin-top: 30px;
-      }
-    </style>
+    <link rel="stylesheet" href="/style.css" />
   </head>
   <body>
+    <div class="toggle-button">
+      <label class="switch">
+        <input type="checkbox" id="themeToggle" />
+        <span class="slider"></span>
+      </label>
+      <span id="themeLabel">Cambiar a Tema Oscuro</span>
+    </div>
+
     <h1>Control de Bomba de Agua</h1>
-    <button id="onButton" style="display: none" onclick="controlBomba('on')">
-      Encender
-    </button>
-    <button id="offButton" style="display: none" onclick="controlBomba('off')">
-      Apagar
-    </button>
+
+    <div class="loader" id="loader"></div>
+
+    <button id="onButton" style="display: none">Encender</button>
+    <button id="offButton" style="display: none">Apagar</button>
 
     <div id="status">Estado: <span id="pumpStatus">Desconocido</span></div>
 
-    <!-- Formulario para agendar encendido/apagado -->
-    <div id="scheduleForm">
-      <h2>Programar Encendido/Apagado</h2>
-      <label for="taskType">Acción:</label>
-      <select id="taskType">
-        <option value="on">Encender</option>
-        <option value="off">Apagar</option>
-      </select>
-    </div>
-
-    <script>
-      function controlBomba(action) {
-        const url = `/bomb/${action}`;
-        fetch(url)
-          .then((response) => {
-            if (response.ok) {
-              actualizarEstado();
-            } else {
-              alert("Hubo un error al intentar controlar la bomba.");
-            }
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-            alert("Hubo un problema con la solicitud.");
-          });
-      }
-
-      function actualizarEstado() {
-        fetch("/bomb/state")
-          .then((response) => response.json())
-          .then((data) => {
-            const statusElement = document.getElementById("pumpStatus");
-            const onButton = document.getElementById("onButton");
-            const offButton = document.getElementById("offButton");
-
-            if (data.state) {
-              statusElement.textContent = "Encendida";
-              onButton.style.display = "none";
-              offButton.style.display = "inline-block";
-            } else {
-              statusElement.textContent = "Apagada";
-              onButton.style.display = "inline-block";
-              offButton.style.display = "none";
-            }
-          })
-          .catch((error) => {
-            console.error("Error al obtener el estado:", error);
-          });
-      }
-
-      actualizarEstado();
-    </script>
+    <script type="module" src="/main.js"></script>
   </body>
 </html>
