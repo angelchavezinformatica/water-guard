@@ -32,6 +32,9 @@
         font-size: 24px;
         color: #333;
       }
+      #scheduleForm {
+        margin-top: 30px;
+      }
     </style>
   </head>
   <body>
@@ -44,6 +47,16 @@
     </button>
 
     <div id="status">Estado: <span id="pumpStatus">Desconocido</span></div>
+
+    <!-- Formulario para agendar encendido/apagado -->
+    <div id="scheduleForm">
+      <h2>Programar Encendido/Apagado</h2>
+      <label for="taskType">Acción:</label>
+      <select id="taskType">
+        <option value="on">Encender</option>
+        <option value="off">Apagar</option>
+      </select>
+    </div>
 
     <script>
       function controlBomba(action) {

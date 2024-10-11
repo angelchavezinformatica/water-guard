@@ -28,11 +28,16 @@ class Response:
         return message.encode()
 
 
-def get_response(request: Request, message: str = "", content_type: str = "text/plain") -> Response:
+def get_response(
+    request: Request,
+    message: str = "",
+    content_type: str = "text/plain",
+    code=HttpStatusCode.OK
+) -> Response:
     """Create an OK response"""
     return Response(
         body=message,
-        code=HttpStatusCode.OK,
+        code=code,
         headers={
             'Content-Type': content_type,
             'Content-Length': len(message),

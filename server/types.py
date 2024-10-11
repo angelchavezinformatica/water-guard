@@ -16,8 +16,9 @@ class StatusCode:
 
 class HttpStatusCode:
     OK = StatusCode(200, "OK")
-    NOT_FOUND = StatusCode(404, "Not Found")
     CREATED = StatusCode(201, "Created")
+    BAD_REQUEST = StatusCode(400, "Bad Request")
+    NOT_FOUND = StatusCode(404, "Not Found")
 
 
 class RequestLine:

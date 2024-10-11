@@ -1,5 +1,4 @@
 import socket
-import uasyncio as asyncio
 
 from .logger import logger
 from .request import Request
@@ -15,14 +14,13 @@ class Server:
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sock.bind((host, port))
         self.sock.listen()
-        self.sock.setblocking(False)
 
         self.ifconfig = None
         self.buffer_size = buffer_size
 
-    async def run_non_blocking(self):
+    def run(self):
         while not WLAN.isconnected():
-            await asyncio.sleep(1)
+            pass
 
         self.ifconfig = WLAN.ifconfig()
 
@@ -31,31 +29,23 @@ class Server:
         while True:
             try:
                 conn, addr = self.sock.accept()
-                conn.setblocking(False)
-                await self.request_handler(conn, addr)
+                self.request_handler(conn, addr)
             except OSError:
-                await asyncio.sleep(0.1)
+                pass
 
-    async def request_handler(self, conn: socket.socket, addr):
+    def request_handler(self, conn: socket.socket, addr):
         try:
-            data = await asyncio.wait_for(self.read_async(conn), timeout=10)
+            data = conn.recv(self.buffer_size)
             if not data:
                 return
             request = Request(data, addr)
             response = self.router(request)
             logger(response)
-            await self.send_async(conn, response.encode())
+            self.send_async(conn, response.encode())
         finally:
             conn.close()
 
-    async def read_async(self, conn: socket.socket):
-        while True:
-            try:
-                return conn.recv(self.buffer_size)
-            except OSError:
-                await asyncio.sleep(0.1)
-
-    async def send_async(self, conn: socket.socket, data: bytes, chunk_size=512):
+    def send_async(self, conn: socket.socket, data: bytes, chunk_size=512):
         total_sent = 0
         data_len = len(data)
         while total_sent < data_len:
@@ -65,7 +55,7 @@ class Server:
                     raise RuntimeError("Socket connection broken")
                 total_sent += sent
             except OSError:
-                await asyncio.sleep(0.1)
+                pass
 
     def router(self, request: Request) -> Response:
         for path in self.routes:
